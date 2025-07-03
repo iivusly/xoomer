@@ -1,14 +1,11 @@
-use libwayshot::WayshotConnection;
 use raylib::{ffi::Image as FfiImage, prelude::*};
+use xcap::Monitor;
+
 const SPOTLIGHT_TINT: Color = Color::new(0x00, 0x00, 0x00, 190);
 
 fn main() {
-    let wayshot_connection =
-        WayshotConnection::new().expect("failed to connect to the wayland display server");
-    let screenshot_image = wayshot_connection
-        .screenshot_all(false)
-        .expect("failed to take a screenshot")
-        .to_rgba8();
+    let monitor = Monitor::from_point(0, 0).expect("failed to get Monitor from point");
+    let screenshot_image = monitor.capture_image().expect("failed to capture image");
     let (width, height) = screenshot_image.dimensions();
     let (mut rl, thread) = raylib::init()
         .title(env!("CARGO_BIN_NAME"))
